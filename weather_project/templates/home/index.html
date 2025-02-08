@@ -1,0 +1,98 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Application Django</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'images/meteorology_5903803.png' %}">
+
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
+
+</head>
+
+<body>
+
+    <header>
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary justify-content-center">
+            <div class="container-fluid">
+                <a class="navbar-brand mx-auto">Current Weather Application</a>
+            </div>
+        </nav>
+
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <div class="row">
+
+            <!-- Left Panel (aside) -->
+            <aside class="col-md-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        Enter City
+                    </div>
+                    <div class="card-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="btn btn-primary w-100">Get Weather</button>
+                        </form>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Right Panel (section) -->
+            <section class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        Weather Information
+                    </div>
+                    <div class="card-body">
+                        {% if data_dict %}
+                        {% if data_dict.error %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ data_dict.error }}
+                        </div>
+                        {% else %}
+                        <ul class="list-group mt-3">
+                            <li class="list-group-item"><strong>City:</strong> {{ data_dict.city }}</li>
+                            <li class="list-group-item"><strong>Country:</strong> {{ data_dict.country_code }}</li>
+                            <li class="list-group-item"><strong>Temperature:</strong> {{ data_dict.temp }}</li>
+                            <li class="list-group-item"><strong>Description:</strong> {{ data_dict.main }} <img
+                                    src="{{ data_dict.icon }}" alt="Weather Icon"> </li>
+                            <li class="list-group-item"><strong>Pressure:</strong> {{ data_dict.pressure }}</li>
+                            <li class="list-group-item"><strong>Humidity:</strong> {{ data_dict.humidity }}</li>
+                            <li class="list-group-item"><strong>Coordinates:</strong> {{ data_dict.coordinate }}</li>
+                        </ul>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-4 bg-primary text-white text-center py-3">
+        &copy; 2025 Weather Application Django
+    </footer>
+
+
+    <!-- Bootstrap core JS -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OTsY2i9OK9vQWXFyW3tvk2wMkk+7UeXt/k9aWbO+W/NMvpvH7p2tW8r0jEbYkZj5" crossorigin="anonymous">
+        </script> -->
+
+</body>
+
+</html>

@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import dj_database_url
 
 # Load variables from .env
 load_dotenv()
@@ -89,16 +90,22 @@ WSGI_APPLICATION = 'src.wsgi.application'
 #     }
 # }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.getenv('POSTGRES_DB_NAME'),
+#         'USER': os.getenv('POSTGRES_DB_USER'),
+#         'PASSWORD': os.getenv('POSTGRES_DB_PASSWORD'),
+#         'HOST': os.getenv('POSTGRES_DB_HOST'),
+#         'PORT': os.getenv('POSTGRES_DB_PORT'),
+#     }
+# }
+
+# Database in cloud
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB_NAME'),
-        'USER': os.getenv('POSTGRES_DB_USER'),
-        'PASSWORD': os.getenv('POSTGRES_DB_PASSWORD'),
-        'HOST': os.getenv('POSTGRES_DB_HOST'),
-        'PORT': os.getenv('POSTGRES_DB_PORT'),
-    }
+    'default': dj_database_url.config(default=os.getenv("DATABASE_URL"))
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

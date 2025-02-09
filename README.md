@@ -58,11 +58,14 @@ pip install -r requirements.txt
 API_WEATHER_KEY=your_api_key_here
 
 # PostgreSQL Database Configuration
-DB_NAME=your_database_name
-DB_USER=your_database_user
-DB_PASSWORD=your_database_password
-DB_HOST=your_database_host
-DB_PORT=your_database_port
+POSTGRES_DB_NAME=your_database_name
+POSTGRES_DB_USER=your_database_user
+POSTGRES_DB_PASSWORD=your_database_password
+POSTGRES_DB_HOST=your_database_host
+POSTGRES_DB_PORT=your_database_port
+
+# Django Secret Key
+SECRET_KEY='your_secret_django_key_here
 ```
 
 5. Run Database Migrations
@@ -72,7 +75,8 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-6. Run the Development Server
+6. Run locally the Development Server. Django application is now available at `http://localhost:8000`.
+
 ```bash
 python manage.py runserver
 ```

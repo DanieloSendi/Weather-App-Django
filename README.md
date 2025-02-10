@@ -8,11 +8,10 @@ Welcome to the **Weather Application Project**, built using **Django - Python We
 
 ## Technologies used
 
-- **Backend:** Django (Python)
-- **Frontend:** HTML, CSS (Bootstrap)
+- **Backend:** Django
+- **Frontend:** HTML, CSS
 - **API:** WeatherAPI
 - **Database:** PostgreSQL
-- **Rate Limiting:** `django-ratelimit`
 
 ## Features
 
@@ -83,8 +82,7 @@ python manage.py runserver
 
 
 ## Future improvemnets
-
-- Deploy the app – Host the application on a cloud platform like Heroku, Vercel to make it publicly accessible.  
+ 
 - Improve UI design
 - Optimize performance with Redis as an in-memory cache to store API responses and reduce redundant requests.  
 

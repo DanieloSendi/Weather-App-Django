@@ -66,4 +66,4 @@ def index_view(request):
             #     data_dict = {"error": f"Data fetch error: {e}"}    
                 
     context = {"form": form, "data_dict": data_dict}
-    return render(request, 'home/index.html', context=context)
+    return render(request, 'index.html', context=context)

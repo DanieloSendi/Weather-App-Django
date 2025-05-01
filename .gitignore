@@ -399,3 +399,5 @@ FodyWeavers.xsd
 
 # Venv environment
 .env
+
+.vercel

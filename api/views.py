@@ -45,18 +45,6 @@ def index_view(request):
                         "main": str(list_data['current']['condition']['text']),
                         "icon": list_data['current']['condition']['icon'],
                     }
-                    print(data_dict)
-                    
-                    # Save the data to the database
-                    City.objects.create(
-                        city=city,
-                        country_code=data_dict["country_code"],
-                        temperature=data_dict["temp"],
-                        pressure=data_dict["pressure"],
-                        humidity=data_dict["humidity"],
-                        main=data_dict["main"],
-                        icon=data_dict["icon"],
-                    )
                 
             except requests.exceptions.Timeout:
                 data_dict = {"error": "The request timed out. Please try again later."}

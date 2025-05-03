@@ -9,6 +9,6 @@ python3 manage.py makemigrations
 python3 manage.py migrate
 
 # Converting static files
-python3 manage.py collectstatic
+python3 manage.py collectstatic --noinput
 
 echo "Build script completed"

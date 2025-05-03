@@ -6,11 +6,13 @@ import requests
 from django_ratelimit.decorators import ratelimit
 from .models import City
 from .forms import WeatherQueryForm
+from django.http import JsonResponse
+
 
 API_KEY = os.getenv("API_WEATHER_KEY")
-BASE_URL = 'https://api.weatherapi.com/v1/current.json'
+BASE_URL = 'https://api.weatherapi.com/v1'
 
-@ratelimit(key='ip', rate='5/s', method='POST', block=True)
+@ratelimit(key='ip', rate='6/s', method='POST', block=True)
 def index_view(request):
     
     form = WeatherQueryForm()
@@ -23,7 +25,7 @@ def index_view(request):
             params = {"key": API_KEY, "q": city, "aqi": "no",}
             
             try:
-                response = requests.get(BASE_URL, params=params)
+                response = requests.get(f'{BASE_URL}/current.json', params=params)
                 # Checking for https errors
                 response.raise_for_status()
                 # Convert the JSON data to a Python dictionary
@@ -67,3 +69,19 @@ def index_view(request):
                 
     context = {"form": form, "data_dict": data_dict}
     return render(request, 'index.html', context=context)
+
+
+@ratelimit(key='ip', rate='6/s', method='GET', block=True)
+def autocomplete_view(request):
+    query = request.GET.get('q', '')
+    if not query:
+        return JsonResponse([], safe=False)
+    
+    params = {"key": API_KEY, "q": query, "aqi": "no"}
+    try:
+        response = requests.get(f'{BASE_URL}/search.json', params=params)
+        response.raise_for_status()
+        cities = response.json()
+        return JsonResponse(cities, safe=False)
+    except requests.RequestException:
+        return JsonResponse([], safe=False)

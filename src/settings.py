@@ -63,6 +63,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    'api.middleware.LoggingMiddleware',
 ]
 
 ROOT_URLCONF = 'src.urls'

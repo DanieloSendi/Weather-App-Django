@@ -1,4 +1,4 @@
-# build.sh
+#!/usr/bin/env bash
 echo "Starting build script"
 
 # Installation of packages

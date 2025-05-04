@@ -1,6 +1,17 @@
 {
-  "buildCommand": "./build.sh",
-  "outputDirectory": "staticfiles",
+  "builds": [
+    {
+      "src": "src/wsgi.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "build.sh",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "staticfiles"
+      }
+    }
+  ],
   "routes": [
     {
       "src": "/static/(.*)",

@@ -1,14 +1,19 @@
 #!/usr/bin/env bash
 echo "Starting build script"
 
+# Exit immediately if a command fails
+set -e
+
 # Installation of packages
-pip install -r requirements.txt
+echo "Installing packages..."
+python3 -m pip install -r requirements.txt
 
-# Database migration
-python3 manage.py makemigrations
-python3 manage.py migrate
+# Database migration (apply existing migrations)
+echo "Applying database migrations..."
+python3 manage.py migrate --noinput
 
-# Converting static files
+# Collect static files
+echo "Collecting static files..."
 python3 manage.py collectstatic --noinput
 
-echo "Build script completed"
+echo "Build script completed successfully"

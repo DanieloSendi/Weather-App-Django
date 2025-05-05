@@ -2,27 +2,27 @@
  
 ## Introduction
 
-Welcome to the **Weather Application Project**, built using **Django - Python Web Framework** for the backend and **HTML | CSS** for the frontend. This application fetches real-time weather data using the **WeatherAPI** and displays it in a user-friendly interface.
+Welcome to the **Weather Application Project**, built using **Django - Python Web Framework** for the backend and **HTML | CSS | JS** for the frontend. This application fetches real-time weather data using the **WeatherAPI** and displays it in a user-friendly interface.
 
 ---
 
 ## Technologies used
 
 - **Backend:** Django
-- **Frontend:** HTML, CSS
+- **Frontend:** HTML, CSS, JS
 - **API:** WeatherAPI
 - **Database:** PostgreSQL
 
 ## Features
 
 - Fetches **real-time weather data** from WeatherAPI  
-- Allows users to **search for weather conditions**
-- Displays **weather parameters** such as temperature, humidity, and pressure  
-- Implements **rate limiting** to prevent API abuse (excessive requests)  
-- Uses **environment variables** to store API keys securely and database configuration 
-- **Handles errors** if the external API is down or if the city name is invalid 
+- Allows users to **search for weather conditions** by city name.
+- Displays **weather parameters** such as temperature, humidity, and pressure etc.
+- Implements **rate limiting** to prevent API abuse.
+- Uses **environment variables** to store API keys and database configuration securely.
+- **Handles errors** if the external API is down or if the city name is invalid
 
-## Instalation and setup (Windows)
+## Installation and setup
 
 1. Clone repository:
 
@@ -44,13 +44,13 @@ python -m virtualenv venv
 .\venv\Scripts\activate.ps1
 ```
 
-3. Install dependecies
+4. Install dependecies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Set up environment variables. Create a .env file in the project root and add the following configuration :
+5. Set up environment variables. Create a .env file in the project root and add the following configuration:
 
 ```bash
 # API Key for WeatherAPI
@@ -64,28 +64,41 @@ POSTGRES_DB_HOST=your_database_host
 POSTGRES_DB_PORT=your_database_port
 
 # Django Secret Key
-SECRET_KEY='your_secret_django_key_here
+SECRET_KEY='your_secret_django_key_here'
+
+# Debug Mode
+ENVIRONMENT='development'
+
 ```
 
-5. Run Database Migrations
+6. Run Database Migrations
 
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-6. Run locally the Development Server. Django application is now available at `http://localhost:8000`.
+7. Run locally the development server. Django application is now available at `http://localhost:8000`.
 
 ```bash
 python manage.py runserver
 ```
 
+## Deployment (Vercel)
+
+This project can be deployed on **[Vercel](https://vercel.com/home)** using a custom `build.sh` script.  
+The script automatically installs dependencies, applies migrations, and collects static files.
+
+Key points:
+- `build.sh` handles installation, migration, and static file collection.
+- `vercel.json` is configured to use Django as a Python backend server.
+- No need to upload `staticfiles/` to GitHub; they are generated during build.
 
 ## Future improvemnets
  
 - Improve UI design
-- Optimize performance with Redis as an in-memory cache to store API responses and reduce redundant requests.  
-
+- Optimize performance with Redis as an in-memory cache to store API responses and reduce redundant requests.
+- Add unit tests to ensure application reliability
 
 ## Additional Resources
 

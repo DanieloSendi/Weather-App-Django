@@ -10,7 +10,8 @@ class WeatherQueryForm(forms.ModelForm):
         widgets = {
             'city': forms.TextInput(
                 attrs={
-                'placeholder': 'Enter city name',
+                'id': 'city-input',
+                'placeholder': 'Enter at least 3 letters to see suggestions',
                 'class': 'form-control',
                 'required': True
                 }

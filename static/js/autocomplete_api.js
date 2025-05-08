@@ -2,7 +2,7 @@ const input = document.getElementById('city-input');
 const suggestions = document.getElementById('suggestions');
 
 input.addEventListener('input', async function () {
-    if (input.value.length < 2) {
+    if (input.value.length < 3) {
         suggestions.innerHTML = '';
         return;
     }

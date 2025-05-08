@@ -4,64 +4,109 @@ from django.shortcuts import render
 import os
 import requests
 from django_ratelimit.decorators import ratelimit
-from .models import City
 from .forms import WeatherQueryForm
 from django.http import JsonResponse
+from datetime import datetime
 
 
 API_KEY = os.getenv("API_WEATHER_KEY")
 BASE_URL = 'https://api.weatherapi.com/v1'
 
-@ratelimit(key='ip', rate='6/s', method='POST', block=True)
+
+@ratelimit(key='ip', rate='6/min', method='POST', block=True)
 def index_view(request):
-    
     form = WeatherQueryForm()
-    data_dict = {} 
+    current_weather = {}
+    forecast_days = []
     
     if request.method == "POST":
         form = WeatherQueryForm(request.POST)
         if form.is_valid():
             city = form.cleaned_data['city'].strip()
-            params = {"key": API_KEY, "q": city, "aqi": "no",}
+            params = {"key": API_KEY, "q": city, "days": 3, "aqi": "yes"}
             
             try:
-                response = requests.get(f'{BASE_URL}/current.json', params=params)
-                # Checking for https errors
-                response.raise_for_status()
-                # Convert the JSON data to a Python dictionary
-                list_data = response.json()
+                response = requests.get(f'{BASE_URL}/forecast.json', params=params)
+                # Convert the JSON data to a python dictionary
+                data = response.json()
 
-                if "error" in list_data and "message" in list_data["error"]:
-                    data_dict = {"error": f"API error: {list_data['error']['message']}"}
+                if "error" in data:
+                    error_message = data["error"].get("message", "Unknown error")
+                    if "No matching location found" in error_message:
+                        current_weather = {"error": "Sorry, no matching city was found. Please try again."}
+                    else:
+                        current_weather = {"error": f"Weather API Error: {error_message}"}
                 else:
-                    # Map weather data to the dictionary
-                    data_dict = {
-                        "city": str(list_data['location']['name']),
-                        "country_code": str(list_data['location']['country']),
-                        "coordinate": str(list_data['location']['lon']) + ', ' + str(list_data['location']['lat']),
-                        "temp": str(list_data['current']['temp_c']) + ' °C',
-                        "pressure": str(list_data['current']['pressure_mb']) + ' hPa',
-                        "humidity": str(list_data['current']['humidity']) + ' %',
-                        "main": str(list_data['current']['condition']['text']),
-                        "icon": list_data['current']['condition']['icon'],
+                    
+                    # Checking for https errors
+                    response.raise_for_status()
+                    
+                    epa_index = data['current']['air_quality']['us-epa-index']
+                    epa_description = {
+                        1: "Good",
+                        2: "Moderate",
+                        3: "Unhealthy for Sensitive Group",
+                        4: "Unhealthy",
+                        5: "Very Unhealthy",
+                        6: "Hazardous"
+                    }.get(epa_index, "Unknown")
+                    
+                    epa_color = {
+                        "Good": "success",
+                        "Moderate": "warning",
+                        "Unhealthy for Sensitive Group": "orange",
+                        "Unhealthy": "danger",
+                        "Very Unhealthy": "danger",
+                        "Hazardous": "dark"
+                    }.get(epa_description, "secondary")
+                    
+                    # Current weather parameters map to the dictionary
+                    current_weather = {
+                        "city": str(data['location']['name']),
+                        "country_code": str(data['location']['country']),
+                        "coordinate": str(data['location']['lon']) + ', ' + str(data['location']['lat']),
+                        "temp": str(data['current']['temp_c']) + ' °C',
+                        "pressure": str(data['current']['pressure_mb']) + ' hPa',
+                        "humidity": str(data['current']['humidity']) + ' %',
+                        "main": str(data['current']['condition']['text']),
+                        "icon": data['current']['condition']['icon'],
+                        "epa_description": epa_description,
+                        "epa_color": epa_color,
                     }
+
+                    # Forecast (for the next days)
+                    forecast_days = []
+                    for day in data['forecast']['forecastday'][1:]:
+                        date_object = datetime.strptime(day['date'], "%Y-%m-%d")
+                        day_name = date_object.strftime("%A")
+                        
+                        forecast_days.append({
+                            "date": day['date'],
+                            "day_name": day_name,
+                            "avg_temp": str(day['day']['avgtemp_c']) + ' °C',
+                            "condition": day['day']['condition']['text'],
+                            "icon": day['day']['condition']['icon'],
+                        })
                 
             except requests.exceptions.Timeout:
-                data_dict = {"error": "The request timed out. Please try again later."}
+                current_weather = {"error": "The request timed out. Please try again later."}
             except requests.exceptions.ConnectionError:
-                data_dict = {"error": "Could not connect to the weather service. Check your internet connection."}
+                current_weather = {"error": "Could not connect to the weather service. Check your internet connection."}
             except requests.exceptions.RequestException:
-                data_dict = {"error": "Unexpected error. Please try again later."}
+                current_weather = {"error": "Unexpected error. Please try again later."}
             # except requests.exceptions.RequestException as e:
-            #     data_dict = {"error": f"Data fetch error: {e}"}    
-                
-    context = {"form": form, "data_dict": data_dict}
+            #     current_weather = {"error": f"Unexpected error occurred: {str(e)}"}
+            
+    context = {
+        "form": form,
+        "current_weather": current_weather,
+        "forecast_days": forecast_days
+    }
     return render(request, 'index.html', context=context)
 
 
-@ratelimit(key='ip', rate='6/s', method='GET', block=True)
 def autocomplete_view(request):
-    query = request.GET.get('q', '')
+    query = request.GET.get('q', '').strip()
     if not query:
         return JsonResponse([], safe=False)
     

@@ -403,3 +403,4 @@ FodyWeavers.xsd
 .vercel
 
 /staticfiles
+htmlcov

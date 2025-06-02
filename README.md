@@ -2,9 +2,7 @@
 
 [![Python Version](https://img.shields.io/badge/python-3.10.11-blue?logo=python)](https://www.python.org/downloads/release/python-31011/)
 [![Django Version](https://img.shields.io/badge/django-5.1.6-blueviolet?logo=django)](https://docs.djangoproject.com/en/5.2/releases/5.1.6/)
-
 [![CI Status](https://github.com/DanieloSendi/Weather-App-Django/actions/workflows/django.yml/badge.svg)](https://github.com/DanieloSendi/Weather-App-Django/actions/workflows/django.yml)
-
 [![Coverage Status](https://coveralls.io/repos/github/DanieloSendi/Weather-App-Django/badge.svg?branch=main)](https://coveralls.io/github/DanieloSendi/Weather-App-Django?branch=main)
 [![License](https://img.shields.io/github/license/DanieloSendi/Weather-App-Django)](https://github.com/DanieloSendi/Weather-App-Django/blob/main/LICENSE)
 

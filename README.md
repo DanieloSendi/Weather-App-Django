@@ -90,6 +90,15 @@ python manage.py migrate
 python manage.py runserver
 ```
 
+## Running tests
+
+To run the tests with coverage locally:
+
+```bash
+coverage run --source='.' manage.py test
+coverage report
+```
+
 ## Deployment (Vercel)
 
 This project can be deployed on **[Vercel](https://vercel.com/home)** using a custom `build.sh` script.  
